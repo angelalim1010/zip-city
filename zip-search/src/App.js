@@ -15,7 +15,8 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      zipCode: null,
+      zipCode: 0,
+      validZip: true,
       cities: []
     };
   }
@@ -27,12 +28,19 @@ class App extends Component {
   };
 
   fetchZipData = zip => {
-    console.log("this is the zip:", zip);
-    axios.get(`http://ctp-zip-api.herokuapp.com/zip/${zip}`).then(res =>
-      this.setState({
-        cities: res.data
-      })
-    );
+    if (zip.match(/\b[0-9]{5}\b/)) {
+      this.setState({ validZip: true });
+      axios
+        .get(`http://ctp-zip-api.herokuapp.com/zip/${zip}`)
+        .then(res =>
+          this.setState({
+            cities: res.data
+          })
+        )
+        .catch(err => console.log(err));
+    } else {
+      this.setState({ validZip: false });
+    }
   };
 
   handleSubmit = e => {
@@ -41,23 +49,27 @@ class App extends Component {
   };
 
   showCities = () => {
-    return (
-      <div>
-        {this.state.cities.map(city => (
-          <div className="cityCard">
-            <div className="cityName">{city.City}</div>
-            <div className="cityInfo">
-              <div>State: {city.State}</div>
-              <div>
-                Location: ({city.Lat}, {city.Long})
+    if (this.state.validZip) {
+      return (
+        <div>
+          {this.state.cities.map(city => (
+            <div className="cityCard">
+              <div className="cityName">{city.City}</div>
+              <div className="cityInfo">
+                <div>State: {city.State}</div>
+                <div>
+                  Location: ({city.Lat}, {city.Long})
+                </div>
+                <div>Population (estimated): {city.EstimatedPopulation}</div>
+                <div>Total Wages: {city.TotalWages}</div>
               </div>
-              <div>Population (estimated): {city.EstimatedPopulation}</div>
-              <div>Total Wages: {city.TotalWages}</div>
             </div>
-          </div>
-        ))}
-      </div>
-    );
+          ))}
+        </div>
+      );
+    } else {
+      return <div>You have entered an invalid zip code.</div>;
+    }
   };
 
   render() {
