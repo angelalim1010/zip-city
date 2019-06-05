@@ -44,7 +44,7 @@ class App extends Component {
     return (
       <div className="zipCodes">
         {this.state.zipCodes.map((zipCode, index) => (
-          <div key={index}>{zipCode}</div>
+          <div className="zipCode"key={index}>{zipCode}</div>
         ))}
       </div>
     );
