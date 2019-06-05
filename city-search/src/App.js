@@ -26,35 +26,25 @@ class App extends Component {
     });
   };
 
-  fetchCityData = zip => {
-    console.log("this is the city:", zip);
-    axios.get(`http://ctp-zip-api.herokuapp.com/zip/${zip}`).then(res =>
+  fetchCityData = city => {
+    console.log("this is the city:", city);
+    axios.get(`http://ctp-zip-api.herokuapp.com/city/${city}`).then(res =>
       this.setState({
-        cities: res.data
+        zipCodes: res.data
       })
     );
   };
 
   handleSubmit = e => {
     e.preventDefault();
-    this.fetchZipData(this.state.zipCode);
+    this.fetchCityData(this.state.city);
   };
 
   showCities = () => {
     return (
-      <div>
-        {this.state.cities.map(city => (
-          <div className="cityCard">
-            <div className="cityName">{city.City}</div>
-            <div className="cityInfo">
-              <div>State: {city.State}</div>
-              <div>
-                Location: ({city.Lat}, {city.Long})
-              </div>
-              <div>Population (estimated): {city.EstimatedPopulation}</div>
-              <div>Total Wages: {city.TotalWages}</div>
-            </div>
-          </div>
+      <div className="zipCodes">
+        {this.state.zipCodes.map((zipCode, index) => (
+          <div key={index}>{zipCode}</div>
         ))}
       </div>
     );
@@ -63,13 +53,13 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className="searchHeader">Zipcode Search</div>
+        <div className="searchHeader">City Search</div>
         <br />
         <div className="searchBox">
           <Form className="form" inline>
             <FormGroup>
-              <Label for="zipCode">Zip Code: </Label>
-              <Input type="number" name="zipCode" onChange={this.updateZip} />
+              <Label for="city">City: </Label>
+              <Input type="text" name="city" onChange={this.updateCity} />
               <Input type="submit" value="Search" onClick={this.handleSubmit} />
             </FormGroup>
           </Form>
