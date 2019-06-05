@@ -53,21 +53,12 @@ class App extends Component {
         cities: res.data
       });
       for (let city of this.state.cities) {
-        await this.filterStates(city);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  filterStates = city => {
-    try {
-      console.log("Current states: ", this.state.states);
-      if (this.state.states.indexOf(city.State) === -1) {
-        this.setState(state => {
-          const states = state.states.concat(city.State);
-          return { states };
-        });
+        if (this.state.states.indexOf(city.State) === -1) {
+          this.setState(prevState => {
+            const states = prevState.states.concat(city.State);
+            return { states };
+          });
+        }
       }
     } catch (err) {
       console.log(err);
@@ -76,8 +67,9 @@ class App extends Component {
 
   filterStatesWithCity = async city => {
     await this.fetchZipCodes(city);
+    this.setState({ states: [] });
     for (let zip of this.state.zipCodes) {
-      await this.fetchCitiesFillStates(zip);
+      this.fetchCitiesFillStates(zip);
     }
   };
 
@@ -86,12 +78,24 @@ class App extends Component {
     this.filterStatesWithCity(this.state.city);
   };
 
-  showCities = () => {
+  showZipCodes = () => {
     return (
       <div className="zipCodes">
         {this.state.zipCodes.map((zipCode, index) => (
           <div className="zipCode" key={index}>
             {zipCode}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  showStates = () => {
+    return (
+      <div className="states">
+        {this.state.states.map((state, index) => (
+          <div className="state" key={index}>
+            {state}
           </div>
         ))}
       </div>
@@ -117,7 +121,10 @@ class App extends Component {
             </FormGroup>
           </Form>
         </div>
-        <div className="searchResults">{this.showCities()}</div>
+        <br />
+        <div className="searchResults">{this.showZipCodes()}</div>
+        <br />
+        <div className="searchResults">{this.showStates()}</div>
       </div>
     );
   }
