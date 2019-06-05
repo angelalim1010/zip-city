@@ -21,6 +21,8 @@ class App extends Component {
   }
 
   updateCity = e => {
+    const city = document.getElementById("city");
+    city.value = city.value.toUpperCase();
     this.setState({
       [e.target.name]: e.target.value
     });
@@ -59,12 +61,16 @@ class App extends Component {
           <Form className="form" inline>
             <FormGroup>
               <Label for="city">City: </Label>
-              <Input type="text" name="city" onChange={this.updateCity} />
+              <Input
+                type="text"
+                id="city"
+                name="city"
+                onChange={this.updateCity}
+              />
               <Input type="submit" value="Search" onClick={this.handleSubmit} />
             </FormGroup>
           </Form>
         </div>
-
         <div className="searchResults">{this.showCities()}</div>
       </div>
     );
