@@ -3,29 +3,38 @@
 }
 
 .searchHeader {
-          background-color: #222;
-          color: white;
-          font-size: 1.25rem;
-          font-weight: 800;
-          margin: 0;
-          padding: 1rem;
+  background-color: #222;
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: 0;
+  padding: 1rem;
 }
 
-.form{
-     display: inline-block;
+.form {
+  display: inline-block;
 }
 
-.zipCodes{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+.zipCodes,
+.states {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.zipCode{
-    border-radius: 20px;
-    border: 1px solid black;
-    text-align: center;
-    position: relative;
-    margin: 5px;
-    width: 100px;
+.zipCode,
+.state {
+  border-radius: 20px;
+  border: 1px solid black;
+  text-align: center;
+  position: relative;
+  margin: 5px;
+  width: 100px;
+}
+
+.zipCode {
+  background-color: lightcoral;
+}
+.state {
+  background-color: lightblue;
 }
