@@ -10,6 +10,7 @@ import {
   Button
 } from "reactstrap";
 import "./App.css";
+import { fetchZipData } from "../../zip-search/src/App";
 
 class App extends Component {
   constructor() {
@@ -17,7 +18,9 @@ class App extends Component {
     this.state = {
       city: "",
       zipCodes: [],
-      states: []
+      cities: [],
+      states: [],
+      validZip: true
     };
   }
 
@@ -47,7 +50,9 @@ class App extends Component {
     return (
       <div className="zipCodes">
         {this.state.zipCodes.map((zipCode, index) => (
-          <div className="zipCode"key={index}>{zipCode}</div>
+          <div className="zipCode" key={index}>
+            {zipCode}
+          </div>
         ))}
       </div>
     );
