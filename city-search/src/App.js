@@ -10,18 +10,18 @@ import {
   Button
 } from "reactstrap";
 import "./App.css";
-import { fetchZipData } from "../../zip-search/src/App";
+
+const INITIAL_STATE = {
+  city: "",
+  zipCodes: [],
+  cities: [],
+  states: []
+};
 
 class App extends Component {
   constructor() {
     super();
-    this.state = {
-      city: "",
-      zipCodes: [],
-      cities: [],
-      states: [],
-      validZip: true
-    };
+    this.state = INITIAL_STATE;
   }
 
   updateCity = e => {
@@ -32,18 +32,58 @@ class App extends Component {
     });
   };
 
-  fetchCityData = city => {
-    console.log("this is the city:", city);
-    axios.get(`http://ctp-zip-api.herokuapp.com/city/${city}`).then(res =>
+  fetchZipCodes = async city => {
+    try {
+      let res = await axios.get(
+        `http://ctp-zip-api.herokuapp.com/city/${city}`
+      );
       this.setState({
         zipCodes: res.data
-      })
-    );
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  fetchCitiesFillStates = async zip => {
+    try {
+      this.setState({ cities: [] });
+      let res = await axios.get(`http://ctp-zip-api.herokuapp.com/zip/${zip}`);
+      this.setState({
+        cities: res.data
+      });
+      for (let city of this.state.cities) {
+        await this.filterStates(city);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  filterStates = city => {
+    try {
+      console.log("Current states: ", this.state.states);
+      if (this.state.states.indexOf(city.State) === -1) {
+        this.setState(state => {
+          const states = state.states.concat(city.State);
+          return { states };
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  filterStatesWithCity = async city => {
+    await this.fetchZipCodes(city);
+    for (let zip of this.state.zipCodes) {
+      await this.fetchCitiesFillStates(zip);
+    }
   };
 
   handleSubmit = e => {
     e.preventDefault();
-    this.fetchCityData(this.state.city);
+    this.filterStatesWithCity(this.state.city);
   };
 
   showCities = () => {
